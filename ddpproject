@@ -196,3 +196,96 @@ void settings_menu() {
         }
     }
 }
+void loading() {
+    clear();
+    for (int i = 0; i < 3; i++) {
+        start_color();
+        init_pair(2, COLOR_BLUE, COLOR_BLACK);
+        attron(COLOR_PAIR(2));
+        mvprintw(5, 10,"- > - > - > - > - > - > - > - > - > - > - > - > - > - >");
+        mvprintw(6, 10,"< - < - < - < - < - < - < - < - < - < - < - < - < - < -");
+        mvprintw(7, 10,"      _      ____          _____ _____ _   _  _____     ");
+        mvprintw(8, 10,"     | |    / __ \\   /\\   |  __ \\_   _| \\ | |/ ____|    ");
+        mvprintw(9, 10,"     | |   | |  | | /  \\  | |  | || | |  \\| | |  __     ");
+        mvprintw(10, 11,"    | |   | |  | |/ /\\ \\ | |  | || | | . ' | | |_ |    ");
+        mvprintw(11, 11,"    | |___| |__| / ____ \\| |__| || |_| |\\  | |__| |    ");
+        mvprintw(12, 11,"    |______\\____/_/    \\_\\_____/_____|_| \\_|\\_____|    ");
+        mvprintw(13, 10,"- > - > - > - > - > - > - > - > - > - > - > - > - > - >");
+        mvprintw(14, 10,"< - < - < - < - < - < - < - < - < - < - < - < - < - < -");
+        attroff(COLOR_PAIR(2));
+        mvprintw(15, 10, "|             
+
+        for(int f = 1;f<54; f++){
+            start_color();
+            init_pair(1, COLOR_BLUE, COLOR_BLUE);
+            attron(COLOR_PAIR(1));
+            mvprintw(15, 10 + f, ">");
+            refresh();
+            Sleep(200);
+            attroff(COLOR_PAIR(1));
+    }
+        clear();
+    }
+}
+
+int main() {
+    initscr();
+    raw();
+    keypad(stdscr, TRUE);
+    echo();
+    Menuakun();
+    int pilihan = -1;
+    const char *opsi[] = {"Start Game", "Settings", "Scores", "Quit"};
+    int jumlahOpsi = sizeof(opsi) / sizeof(char *);
+    int pilihanTerpilih = 0;
+
+    while (pilihan == -1) {
+        clear();
+        mvprintw(0, 0, "Main Menu");
+        for (int i = 0; i < jumlahOpsi; i++) {
+            if (i == pilihanTerpilih)
+                attron(A_REVERSE);
+            mvprintw(i + 1, 2, opsi[i]);
+            attroff(A_REVERSE);
+        }
+        int tombol = getch();
+        switch (tombol) {
+            case KEY_UP:
+                if (pilihanTerpilih == 0)
+                    pilihanTerpilih = jumlahOpsi - 1;
+                else
+                    --pilihanTerpilih;
+                break;
+            case KEY_DOWN:
+                if (pilihanTerpilih == jumlahOpsi - 1)
+                    pilihanTerpilih = 0;
+                else
+                    ++pilihanTerpilih;
+                break;
+            case 10: 
+                pilihan = pilihanTerpilih;
+                break;
+        }
+
+        switch (pilihan) {
+            case 0: 
+                loading();
+                break;
+            case 1: 
+                settings_menu();
+                break;
+            case 2: // Scores
+                printw("\nScores feature is not available yet.\n");
+                refresh();
+                break;
+            case 3: // Quit
+                printw("Terima kasih! Sampai jumpa!\n");
+                refresh();
+                break;
+        }
+    }
+
+    endwin();
+    return 0;
+}
+            
