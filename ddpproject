@@ -1,0 +1,91 @@
+#include <curses.h>
+#include <fstream>
+#include <string>
+#include <windows.h>
+
+using namespace std;
+
+void settings_menu(), loading(), Menuakun();
+void buatAkun();
+bool login();
+void Menuakun() {
+    const int jumlahOpsi = 2;
+    const char* opsi[jumlahOpsi] = {"Buat akun", "Login"};
+    int pilihanTerpilih = 0;
+    int pilihan = -1;
+
+    while (pilihan == -1) {
+        clear();
+        mvprintw(0, 0, "Main Menu");
+        for (int i = 0; i < jumlahOpsi; i++) {
+            if (i == pilihanTerpilih)
+                attron(A_REVERSE);
+            mvprintw(i + 1, 2, opsi[i]);
+            attroff(A_REVERSE);
+        }
+        int tombol = getch();
+        switch (tombol) {
+            case KEY_UP:
+                if (pilihanTerpilih == 0)
+                    pilihanTerpilih = jumlahOpsi - 1;
+                else
+                    --pilihanTerpilih;
+                break;
+            case KEY_DOWN:
+                if (pilihanTerpilih == jumlahOpsi - 1)
+                    pilihanTerpilih = 0;
+                else
+                    pilihanTerpilih++;
+                break;
+            case 10:
+                pilihan = pilihanTerpilih;
+                break;
+        }
+
+        switch (pilihan) {
+            case 0: 
+                buatAkun();
+                break;
+            case 1:
+                if (login()) {
+                    clear();
+                    mvprintw(0, 0, "Login berhasil! Pilih menu berikut:");
+                    refresh();
+                    getch();
+                    return; // Exit to main menu after successful login
+                }
+                break;
+        }
+    }
+}
+
+void buatAkun() {
+    string username, password;
+
+    clear();
+    printw("Masukkan nama pengguna: ");
+    refresh();
+    char tempnama[100];
+    echo();
+    getstr(tempnama);
+    username = tempnama;
+
+    printw("Masukkan kata sandi: ");
+    refresh();
+    char temppass[100];
+    echo();
+    getstr(temppass);
+    password = temppass;
+
+    ofstream file("akun.txt", ios::app);
+    if (file.is_open()) {
+        file << username << "," << password << endl;
+        file.close();
+        printw("\nAkun berhasil dibuat!\n");
+        refresh();
+    } else {
+        printw("\nTerjadi kesalahan dalam menyimpan akun!\n");
+        refresh();
+    }
+    getch();
+}
