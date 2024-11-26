@@ -89,3 +89,110 @@ void buatAkun() {
     }
     getch();
 }
+
+bool login() {
+    string username, password, line;
+    bool loginBerhasil = false;
+
+    clear();
+    printw("Masukkan nama pengguna: ");
+    refresh();
+    char tempnama[100];
+    echo();
+    getstr(tempnama);
+    username = tempnama;
+
+    printw("Masukkan kata sandi: ");
+    refresh();
+    char temppass[100];
+    echo();
+    getstr(temppass);
+    password = temppass;
+
+    ifstream file("akun.txt");
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            size_t pos = line.find(',');
+            string storedUsername = line.substr(0, pos);
+            string storedPassword = line.substr(pos + 1);
+
+            if (username == storedUsername && password == storedPassword) {
+                loginBerhasil = true;
+                break;
+            }
+        }
+        file.close();
+
+        if (loginBerhasil) {
+            printw("\nLogin berhasil! Selamat datang %s\n", username.c_str());
+            refresh();
+        } else {
+            printw("\nUsername atau kata sandi salah!\n");
+            refresh();
+        }
+    } else {
+        printw("\nTerjadi kesalahan dalam membuka file!\n");
+        refresh();
+    }
+    getch();
+    return loginBerhasil;
+}
+
+void settings_menu() {
+    const char *opsiSettings[] = {
+        "Difficulty: Easy",
+        "Volume: 50%",
+        "Fullscreen: OFF",
+        "Back"
+    };
+    int jumlahOpsi = sizeof(opsiSettings) / sizeof(char *);
+    int pilihanTerpilih = 0;
+    int pilihan = -1;
+
+    while (1) {
+        clear();
+        mvprintw(0, 0, "Settings Menu");
+        for (int i = 0; i < jumlahOpsi; i++) {
+            if (i == pilihanTerpilih)
+                attron(A_REVERSE);
+            mvprintw(i + 1, 2, opsiSettings[i]);
+            attroff(A_REVERSE);
+        }
+        int tombol = getch();
+        switch (tombol) {
+            case KEY_UP:
+                if (pilihanTerpilih == 0)
+                    pilihanTerpilih = jumlahOpsi - 1;
+                else
+                    --pilihanTerpilih;
+                break;
+            case KEY_DOWN:
+                if (pilihanTerpilih == jumlahOpsi - 1)
+                    pilihanTerpilih = 0;
+                else
+                    ++pilihanTerpilih;
+                break;
+            case 10:
+                pilihan = pilihanTerpilih;
+                break;
+        }
+
+        if (pilihan != -1) {
+            if (pilihan == 0) { // Difficulty
+                mvprintw(6, 0, "Pilih Kesulitan (Easy/Medium/Hard):");
+                getch();
+            } else if (pilihan == 1) { // Volume
+                mvprintw(6, 0, "Sesuaikan Volume (0-100):");
+                getch();
+            } else if (pilihan == 2) { // Fullscreen
+                mvprintw(6, 0, "Alihkan Layar Penuh (ON/OFF):");
+                getch();
+            } else if (pilihan == 3) { // Back
+                break;
+            }
+            mvprintw(8, 0, "Tekan tombol apa saja untuk kembali ke pengaturan...");
+            getch();
+            pilihan = -1; 
+        }
+    }
+}
