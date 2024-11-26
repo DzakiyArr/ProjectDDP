@@ -213,7 +213,7 @@ void loading() {
         mvprintw(13, 10,"- > - > - > - > - > - > - > - > - > - > - > - > - > - >");
         mvprintw(14, 10,"< - < - < - < - < - < - < - < - < - < - < - < - < - < -");
         attroff(COLOR_PAIR(2));
-        mvprintw(15, 10, "|             
+        mvprintw(15, 10, "|                                                     |");        
 
         for(int f = 1;f<54; f++){
             start_color();
